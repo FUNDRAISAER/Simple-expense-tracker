@@ -101,7 +101,6 @@ def get_amount():
                     return amount
                 else:
                     print("Not a valid amount. try again!")
-
             except ValueError:
                 print("Amount not valid.")
                 continue
@@ -113,7 +112,7 @@ def get_date():
                 datetime.strptime(date, "%Y-%m-%d")
                 return date
             except ValueError:
-                print("Invalid date or format. Please try again.")
+                print("Invalid date or format. Please try again.")            
 
 def add_expense(expenses):
     selected_category = select_category()
@@ -145,7 +144,7 @@ def view_expenses(expenses):
     if not expenses:
             print("No expenses found. Your expense log is currently empty.")
     else:
-        for item in (expenses):
+        for item in expenses:
             print()
             print(
                 f" ID: {item.get('ID')}.\n Category: {item.get('Category')}\n Description: {item.get('Description')}\n Amount: ${item.get('Amount')}\n"
@@ -154,31 +153,40 @@ def view_expenses(expenses):
             print("------------------------------")
 
 def calculate_total(expenses):
-    total = float(0)
+    total = 0
 
     for item in expenses:
-        total += item["Amount"]
+        total += item.get('Amount', 0)
 
     return total
-   
+
 def edit_expense(expenses):
-    expense_id = int(input("Enter expense ID to edit: "))
+    try:
+        expense_id = int(input("Enter expense ID to edit: "))
+    except ValueError:
+        print("Not a valid ID number.")
+        return
 
     found = False
 
     for expense in expenses:
         if expense["ID"] == expense_id:
             found = True
+
             selected_category = select_category()
             new_description = input("Enter new description: ")
             amount = get_amount()
             date = get_date()
+
             expense["Category"] = selected_category
             expense["Description"] = new_description
             expense["Amount"] = amount
             expense["Date"] = date
+
             save_expenses(expenses)
             print(expense)
+            break
+
     if not found:
         print("Expense not found.")
 
