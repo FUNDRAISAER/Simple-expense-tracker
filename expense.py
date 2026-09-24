@@ -62,7 +62,7 @@ def show_menu():
 
 def save_expenses(expenses):
         with open("expense.json", 'w', encoding='utf-8') as file:
-            json.dump(expenses, file)
+            json.dump(expenses, file, indent=2)
 
 def select_category():
     categories = [
@@ -97,19 +97,21 @@ def get_amount():
     while True:
             try:
                 amount = float(input("Enter an amount: $"))
-                if amount > 0 :
-                    break
+                if amount > 0:
+                    return amount
                 else:
                     print("Not a valid amount. try again!")
+
             except ValueError:
                 print("Amount not valid.")
                 continue
+
 def get_date():
     while True:
             try:
                 date = input("Please enter a date (YYYY-MM-DD): ")  
                 datetime.strptime(date, "%Y-%m-%d")
-                break
+                return date
             except ValueError:
                 print("Invalid date or format. Please try again.")
 
@@ -150,18 +152,15 @@ def view_expenses(expenses):
                 f" Date: {item.get('Date')}\n"
             )
             print("------------------------------")
-#view_expenses(expenses)
 
 def calculate_total(expenses):
-    total = 0
+    total = float(0)
 
     for item in expenses:
-        total += item.get('Amount', 0)
+        total += item["Amount"]
 
     return total
    
-total = calculate_total(expenses)
-
 def edit_expense(expenses):
     expense_id = int(input("Enter expense ID to edit: "))
 
